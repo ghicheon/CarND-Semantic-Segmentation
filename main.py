@@ -57,6 +57,9 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
     output = tf.layers.conv2d_transpose(conv_1x1,num_classes,4,2,padding='same',
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    tf.Print(output,[tf.shape(output)])
+    #tf.Print(output,[tf.shape(output)[:]])
+    #tf.Print(output,[tf.shape(output[1:3])])
              
     return None
 tests.test_layers(layers)
