@@ -34,12 +34,17 @@ def load_vgg(sess, vgg_path):
     vgg_layer4_out_tensor_name = 'layer4_out:0'
     vgg_layer7_out_tensor_name = 'layer7_out:0'
 
-    tf.save_model.loader.load(sess,[vgg_tag],vgg_tag)
+    tf.saved_model.loader.load(sess,[vgg_tag],vgg_path)
+
     graph = tf.get_default_graph()
+
     w1 = graph.get_tensor_by_name(vgg_input_tensor_name)
     keep = graph.get_tensor_by_name(vgg_keep_prob_tensor_name)
+    l3out = graph.get_tensor_by_name(vgg_layer3_out_tensor_name)
+    l4out = graph.get_tensor_by_name(vgg_layer4_out_tensor_name)
+    l7out = graph.get_tensor_by_name(vgg_layer7_out_tensor_name)
     
-    return w1, keep, None, None, None
+    return w1, keep, l3out,l4out,l7out
 tests.test_load_vgg(load_vgg, tf)
 
 
@@ -57,11 +62,28 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
     output = tf.layers.conv2d_transpose(conv_1x1,num_classes,4,2,padding='same',
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
-    tf.Print(output,[tf.shape(output)])
+    ##########################################################################
+    i = tf.add(output,vgg_layer4_out)
+
+
+    i = tf.layers.conv2d_transpose(i,num_classes,4,2,padding='same',
+               kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    i = tf.add(i,vgg_layer4_out)
+
+    i = tf.layers.conv2d_transpose(i,num_classes,4,2,padding='same',
+               kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    i = tf.add(i,vgg_layer3_out)
+
+
+    i = tf.layer.conv2d_transpose(i,num_classes,16,8,padding='same',
+               kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+
+    tf.Print(i,[tf.shape(i)])
     #tf.Print(output,[tf.shape(output)[:]])
     #tf.Print(output,[tf.shape(output[1:3])])
              
-    return None
+    return i
+
 tests.test_layers(layers)
 
 
