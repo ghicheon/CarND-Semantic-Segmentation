@@ -8,7 +8,7 @@ import project_tests as tests
 
 
 EPOCH_CNT=1
-BATCH_CNT=3
+BATCH_CNT=7
 
 # Check TensorFlow Version
 assert LooseVersion(tf.__version__) >= LooseVersion('1.0'), 'Please use TensorFlow version 1.0 or newer.  You are using {}'.format(tf.__version__)
@@ -81,9 +81,14 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     i = tf.layers.conv2d_transpose(skip2,num_classes,16,8,padding='same',
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
-    tf.Print(i,[tf.shape(i)])
-    #tf.Print(output,[tf.shape(output)[:]])
-    #tf.Print(output,[tf.shape(output[1:3])])
+    i = tf.Print(i,[tf.shape(l7_1x1)[:]])
+    i = tf.Print(i,[tf.shape(l4_1x1)[:]])
+    i = tf.Print(i,[tf.shape(l3_1x1)[:]])
+    i = tf.Print(i,[tf.shape(deconv1)[:]])
+    i = tf.Print(i,[tf.shape(skip1)[:]])
+    i = tf.Print(i,[tf.shape(deconv2)[:]])
+    i = tf.Print(i,[tf.shape(skip2)[:]])
+    i = tf.Print(i,[tf.shape(i)[:]])
              
     return i
 
@@ -140,6 +145,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
                                  learning_rate:1e-4}
                     )
             print("epoch ",epoches," loss:", loss ) 
+            break #XXXXXXXXXXXXXXxx
 
 tests.test_train_nn(train_nn)
 
@@ -170,7 +176,6 @@ def run():
         # TODO: Build NN using load_vgg, layers, and optimize function
         input_image,keep_prob , layer3_out, layer4_out,layer7_out = load_vgg(sess,vgg_path)
         output = layers(layer3_out,layer4_out , layer7_out, num_classes)
-
 
         correct_label = tf.placeholder(dtype=tf.float32 , shape=(None,None,None,2) )  # 2: classes
         learning_rate = tf.placeholder(dtype=tf.float32)
