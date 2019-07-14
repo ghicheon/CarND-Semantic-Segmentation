@@ -7,8 +7,8 @@ from distutils.version import LooseVersion
 import project_tests as tests
 
 
-EPOCH_CNT=1
-BATCH_CNT=7
+EPOCH_CNT=20
+BATCH_CNT=32
 
 # Check TensorFlow Version
 assert LooseVersion(tf.__version__) >= LooseVersion('1.0'), 'Please use TensorFlow version 1.0 or newer.  You are using {}'.format(tf.__version__)
@@ -63,33 +63,51 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     # TODO: Implement function
     l7_1x1 = tf.layers.conv2d(vgg_layer7_out,num_classes,1,padding='same',
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+
+    l7_1x1 = tf.layers.batch_normalization(l7_1x1 , center=True, scale=True, training=True)
+
     l4_1x1 = tf.layers.conv2d(vgg_layer4_out,num_classes,1,padding='same',
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    l4_1x1 = tf.layers.batch_normalization(l4_1x1 , center=True, scale=True, training=True)
+
     l3_1x1 = tf.layers.conv2d(vgg_layer3_out,num_classes,1,padding='same',
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
+    l3_1x1 = tf.layers.batch_normalization(l3_1x1 , center=True, scale=True, training=True)
     ##########################################################################
     deconv1  = tf.layers.conv2d_transpose(l7_1x1,num_classes,4,2,padding='same',
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    deconv1 = tf.layers.batch_normalization(deconv1 , center=True, scale=True, training=True)
+    ##########################################################################
     skip1 = tf.add(deconv1 , l4_1x1)
+    skip1 = tf.layers.batch_normalization(skip1 , center=True, scale=True, training=True)
 
 
     deconv2 = tf.layers.conv2d_transpose(skip1,num_classes,4,2,padding='same',
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    deconv2 = tf.layers.batch_normalization(deconv2 , center=True, scale=True, training=True)
     skip2 = tf.add(deconv2,l3_1x1)
+    skip2 = tf.layers.batch_normalization(skip2 , center=True, scale=True, training=True)
 
     i = tf.layers.conv2d_transpose(skip2,num_classes,16,8,padding='same',
                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    i = tf.layers.batch_normalization(i, center=True, scale=True, training=True)
 
-    i = tf.Print(i,[tf.shape(l7_1x1)[:]])
-    i = tf.Print(i,[tf.shape(l4_1x1)[:]])
-    i = tf.Print(i,[tf.shape(l3_1x1)[:]])
-    i = tf.Print(i,[tf.shape(deconv1)[:]])
-    i = tf.Print(i,[tf.shape(skip1)[:]])
-    i = tf.Print(i,[tf.shape(deconv2)[:]])
-    i = tf.Print(i,[tf.shape(skip2)[:]])
-    i = tf.Print(i,[tf.shape(i)[:]])
-             
+    """
+    i = tf.Print(i,[tf.shape(l7_1x1)[:]])                   #5 18
+    i = tf.Print(i,[tf.shape(l4_1x1)[:]])                   #10 36
+    i = tf.Print(i,[tf.shape(l3_1x1)[:]])                   #20 72
+    i = tf.Print(i,[tf.shape(deconv1)[:]])                  #10 36
+    i = tf.Print(i,[tf.shape(skip1)[:]])                    #10 36
+    i = tf.Print(i,[tf.shape(deconv2)[:]])                  #20 72
+    i = tf.Print(i,[tf.shape(skip2)[:]])                    #20 72
+    i = tf.Print(i,[tf.shape(i)[:]])                        #160 576
+
+    i = tf.Print(i,[tf.shape( vgg_layer7_out )[:]])        #5 18
+    i = tf.Print(i,[tf.shape( vgg_layer4_out )[:]])        #10 36
+    i = tf.Print(i,[tf.shape( vgg_layer3_out )[:]])        #20 72
+    """
+
     return i
 
 tests.test_layers(layers)
@@ -138,6 +156,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     # TODO: Implement function
     for epoches in range(epochs):
         for image,label in get_batches_fn(batch_size):
+            #print("image.shape:", image.shape)   # 160x576
             _,loss = sess.run([train_op,cross_entropy_loss],
                     feed_dict = {input_image:image,
                                  correct_label:label,
@@ -145,7 +164,6 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
                                  learning_rate:1e-4}
                     )
             print("epoch ",epoches," loss:", loss ) 
-            break #XXXXXXXXXXXXXXxx
 
 tests.test_train_nn(train_nn)
 
@@ -189,6 +207,7 @@ def run():
 
         # TODO: Save inference data using helper.save_inference_samples
         #  helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input_image)
+        helper.save_inference_samples('./runs', '/data', sess, image_shape, logits, keep_prob, input_image)
 
         # OPTIONAL: Apply the trained model to a video
 
