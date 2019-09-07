@@ -2,7 +2,7 @@
 
 # Semantic segmentation
 
-Semantic segmentation is about labeling each pixel of images. Normally, it is used for background scene such as road,      
+Semantic segmentation is about labeling each pixel of images. Normally, it is used for background scene such as road.     
 
 [loss_graph]: ./loss_graph.png "lossgraph"       
 [batch8]:     ./uu_000089_32_8.png "batch8"       
@@ -10,8 +10,6 @@ Semantic segmentation is about labeling each pixel of images. Normally, it is us
 
 
 # Model        
-
-FCN8 model is used.         
 
 Layer 3,4, and 7 of VGG 16  are extracted.     
 
