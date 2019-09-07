@@ -15,21 +15,29 @@ FCN8 model is used.
 
 Layer 3,4, and 7 of VGG 16  are extracted.     
 
-l7_1x1: 1x1 convolution of layer 7    & batch normalization       
-l4_1x1: 1x1 convolution of layer 4    & batch normalization        
-l3_1x1: 1x1 convolution of layer 3    & batch normalization           
-deconv1: l7_1x1 is upsampled by 4x2.  & batch normalization       
-skip1: deconv1 and l4_1x1 are added.  & batch normalization       
-deconv2: skip1 is upsampled by 4x2.   & batch normalization       
-skip2: deconv2 and l3_1x1 are added.  & batch normalization      
-i: skip2 is upsampled by 16x8.        & batch normalization     
+* l7_1x1: 1x1 convolution of layer 7    & batch normalization       
+* l4_1x1: 1x1 convolution of layer 4    & batch normalization        
+* l3_1x1: 1x1 convolution of layer 3    & batch normalization           
+* deconv1: l7_1x1 is upsampled by 4x2.  & batch normalization       
+* skip1: deconv1 and l4_1x1 are added.  & batch normalization       
+* deconv2: skip1 is upsampled by 4x2.   & batch normalization       
+* skip2: deconv2 and l3_1x1 are added.  & batch normalization      
+* i: skip2 is upsampled by 16x8.        & batch normalization     
+
+(l7_1x1, l4_1x1, l3_1x1, deconv1, skip1, deconv2, skip2 , and i  came from main.py ) 
 
 # example image 
-![alt text][batch8]   
+batch 8      
+![alt text][batch8]    
+
+
+batch 16           
 ![alt text][batch16]    
 
 # loss graph
 ![alt text][loss_graph]
+
+It turned out batch 8 gave a better performance.              
 
 
 # misc
