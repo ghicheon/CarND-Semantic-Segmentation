@@ -7,6 +7,7 @@ Semantic segmentation is about labeling each pixel of images. Normally, it is us
 [loss_graph]: ./loss_graph.png "lossgraph"       
 [batch8]:     ./uu_000089_32_8.png "batch8"       
 [batch16]:    ./uu_000089_32_16.png "batch16"     
+[batch8_epoch45]:    ./batch8_epoch45.png "batch8epoch45"    
 
 
 # Model        
@@ -24,18 +25,24 @@ Layer 3,4, and 7 of VGG 16  are extracted.
 
 (l7_1x1, l4_1x1, l3_1x1, deconv1, skip1, deconv2, skip2 , and i  came from main.py ) 
 
-# example image 
-batch 8      
+# example images
+epoch 32 / batch 8      
 ![alt text][batch8]    
 
 
-batch 16           
+epoch 32 / batch 16           
 ![alt text][batch16]    
 
 # loss graph
 ![alt text][loss_graph]
 
-It turned out batch 8 gave a better performance.              
+
+
+![alt text][batch8_epoch45]
+
+
+It turned out the performance batch 8 is better than batch 16.       
+And batch 8 and epoches 45 gave a better performance. I am kind of worried about over fitting though.        
 
 
 # misc
