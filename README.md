@@ -41,7 +41,7 @@ epoch 32 / batch 16
 ![alt text][batch8_epoch45]
 
 
-It turned out the performance batch 8 is better than batch 16.       
+It turned out the performance of batch 8 is better than batch 16.       
 And batch 8 and epoches 45 gave a better performance. I am kind of worried about over fitting though.        
 
 
