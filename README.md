@@ -1,3 +1,35 @@
+
+
+# Model
+Layer 3,4, and 7 of VGG 16  are extracted.
+
+l7_1x1: 1x1 convolution of layer 7    & batch normalization
+l4_1x1: 1x1 convolution of layer 4    & batch normalization
+l3_1x1: 1x1 convolution of layer 3    & batch normalization
+deconv1: l7_1x1 is upsampled by 4x2.  & batch normalization
+skip1: deconv1 and l4_1x1 are added.  & batch normalization
+deconv2: skip1 is upsampled by 4x2.   & batch normalization
+skip2: deconv2 and l3_1x1 are added.  & batch normalization
+i: skip2 is upsampled by 16x8.        & batch normalization
+
+
+#Performance
+
+
+
+# misc
+* with batch normalization, I got a big performance gain. 
+*  The lecture told us that kernel_regularizer is useless without regularizer of loss function. But in my experience, it help improve the performance a little bit.
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------
+Udacity original README.md below      
+----------------------------------------------------------------------------------------------------------
+
+
 # Semantic Segmentation
 ### Introduction
 In this project, you'll label the pixels of a road in images using a Fully Convolutional Network (FCN).
