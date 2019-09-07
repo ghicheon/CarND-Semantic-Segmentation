@@ -1,25 +1,40 @@
 
 
-# Model
-Layer 3,4, and 7 of VGG 16  are extracted.
+# Semantic segmentation
 
-l7_1x1: 1x1 convolution of layer 7    & batch normalization
-l4_1x1: 1x1 convolution of layer 4    & batch normalization
-l3_1x1: 1x1 convolution of layer 3    & batch normalization
-deconv1: l7_1x1 is upsampled by 4x2.  & batch normalization
-skip1: deconv1 and l4_1x1 are added.  & batch normalization
-deconv2: skip1 is upsampled by 4x2.   & batch normalization
-skip2: deconv2 and l3_1x1 are added.  & batch normalization
-i: skip2 is upsampled by 16x8.        & batch normalization
+Semantic segmentation is about labeling each pixel of images. Normally, it is used for background scene such as road,      
+
+[loss_graph]: ./loss_graph.png "lossgraph"       
+[batch8]:     ./uu_000089_32_8.png "batch8"       
+[batch16]:    ./uu_000089_32_16.png "batch16"     
 
 
-#Performance
+# Model        
 
+FCN8 model is used.         
+
+Layer 3,4, and 7 of VGG 16  are extracted.     
+
+l7_1x1: 1x1 convolution of layer 7    & batch normalization       
+l4_1x1: 1x1 convolution of layer 4    & batch normalization        
+l3_1x1: 1x1 convolution of layer 3    & batch normalization           
+deconv1: l7_1x1 is upsampled by 4x2.  & batch normalization       
+skip1: deconv1 and l4_1x1 are added.  & batch normalization       
+deconv2: skip1 is upsampled by 4x2.   & batch normalization       
+skip2: deconv2 and l3_1x1 are added.  & batch normalization      
+i: skip2 is upsampled by 16x8.        & batch normalization     
+
+# example image 
+![alt text][batch8]   
+![alt text][batch16]    
+
+# loss graph
+![alt text][loss_graph]
 
 
 # misc
-* with batch normalization, I got a big performance gain. 
-*  The lecture told us that kernel_regularizer is useless without regularizer of loss function. But in my experience, it help improve the performance a little bit.
+* with batch normalization, I got a big performance gain.   
+*  The lecture told us that kernel_regularizer is useless without regularizer of loss function. But in my experience, it help improve the performance a little bit.            
 
 
 
